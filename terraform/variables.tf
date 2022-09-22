@@ -5,7 +5,7 @@ variable "region" {
 
 variable "s3_bucket" {
   type = string
-  default = "anne-website.com"
+  default = "anne_test_website"
 }
 
 variable "id" {
