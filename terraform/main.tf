@@ -10,7 +10,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = "ap-southeast-2"
+  region  = var.region
 }
 
 #resource "aws_vpc" "anne-test-1" {
@@ -24,7 +24,7 @@ provider "aws" {
 
 
 resource "aws_s3_bucket" "anne-test-website" {
-  bucket = "anne-website.com"
+  bucket = var.s3_bucket
   tags = {
     Name = "anne-website"
     Environment = "Dev"
@@ -54,7 +54,7 @@ resource "aws_s3_bucket_policy" "allow-public-access" {
 data "aws_iam_policy_document" "allow-public-access" {
   statement {
     principals {
-      identifiers = ["064782962204"]
+      identifiers = [var.id]
       type        = "AWS"
     }
 
