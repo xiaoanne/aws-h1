@@ -18,7 +18,7 @@ resource "aws_s3_bucket" "anne_test_website" {
 
 resource "aws_s3_bucket_acl" "anne_test_website_s3_acl" {
   bucket = aws_s3_bucket.anne_test_website.id
-  acl = "public-read"
+  acl = "private"
 }
 
 resource "aws_s3_bucket_website_configuration" "anne_test_website_s3_configuration" {
@@ -33,7 +33,7 @@ resource "aws_s3_bucket_website_configuration" "anne_test_website_s3_configurati
 
 resource "aws_s3_bucket_policy" "allow_public_access" {
   bucket = aws_s3_bucket.anne_test_website.id
-  policy = data.aws_iam_policy_document.allow-public-access.json
+  policy = data.aws_iam_policy_document.allow_cloudfront_access.json
 }
 
 resource "aws_s3_object" "anne_test_website_html" {
