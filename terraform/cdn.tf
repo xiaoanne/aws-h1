@@ -49,8 +49,8 @@ resource "aws_cloudfront_distribution" "anne_s3_distribution" {
 }
 
 resource "aws_cloudfront_origin_access_control" "anne_website_cdn_access_control" {
-  name = "anne-website-access-control"
-  description = "This access control is used for cloudfront to access S3 bucket of anne-tes-website"
+  name                              = "anne-website-access-control"
+  description                       = "This access control is used for cloudfront to access S3 bucket of anne-tes-website"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"

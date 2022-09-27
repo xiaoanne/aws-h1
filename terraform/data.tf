@@ -21,11 +21,10 @@
 
 data "aws_iam_policy_document" "allow_cloudfront_access" {
   statement {
-    sid = "AllowCloudFrontServicePrincipalReadOnly"
-
+    effect = "Allow"
     principals {
-      type        = "Service"
-      identifiers = ["cloudfront.amazonaws.com"]
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity E3S9OUOP6780ZZ"]
     }
 
     actions = [
@@ -35,14 +34,27 @@ data "aws_iam_policy_document" "allow_cloudfront_access" {
     ]
 
     resources = [
-        "arn:aws:s3:::${aws_s3_bucket.anne_test_website.id}",
-        "arn:aws:s3:::${aws_s3_bucket.anne_test_website.id}/*",
+      "arn:aws:s3:::${aws_s3_bucket.anne_test_website.id}",
+      "arn:aws:s3:::${aws_s3_bucket.anne_test_website.id}/*",
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    principals {
+      identifiers = [var.id]
+      type        = "AWS"
+    }
+
+    actions = [
+      "s3:Get*",
+      "s3:List*",
+      "s3:Put*",
     ]
 
-    condition {
-      test     = "ForAnyValue:StringEquals"
-      variable = "AWS:SourceArn"
-      values   = ["arn:aws:cloudfront::064782962204:distribution/E2V3M9OAMMOFL3"]
-    }
+    resources = [
+      "arn:aws:s3:::${aws_s3_bucket.anne_test_website.id}",
+      "arn:aws:s3:::${aws_s3_bucket.anne_test_website.id}/*",
+    ]
   }
 }
