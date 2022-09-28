@@ -1,3 +1,5 @@
+# This .tf file creates the aws cloudfront infra.
+
 resource "aws_cloudfront_origin_access_identity" "anne_test_website_cdn_origin_id" {}
 
 resource "aws_cloudfront_distribution" "anne_s3_distribution" {
@@ -48,6 +50,8 @@ resource "aws_cloudfront_distribution" "anne_s3_distribution" {
   }
 }
 
+
+# This is implemented but not yet being used, the reason is that there is no way to specify to choose use OAC rather than OAI to access the S3 bucket.
 resource "aws_cloudfront_origin_access_control" "anne_website_cdn_access_control" {
   name                              = "anne-website-access-control"
   description                       = "This access control is used for cloudfront to access S3 bucket of anne-tes-website"

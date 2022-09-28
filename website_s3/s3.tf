@@ -1,3 +1,5 @@
+# This .tf file is used to create the s3 bucket and its policy as required.
+
 #resource "aws_vpc" "anne-test-1" {
 #  cidr_block       = "10.0.0.0/16"
 #  instance_tenancy = "default"
@@ -36,6 +38,7 @@ resource "aws_s3_bucket_policy" "allow_public_access" {
   policy = data.aws_iam_policy_document.allow_cloudfront_access.json
 }
 
+#Upload the index and error html files.
 resource "aws_s3_object" "anne_test_website_html" {
   for_each     = fileset("../website/helloworld/", "*")
   bucket       = aws_s3_bucket.anne_test_website.id
@@ -46,6 +49,7 @@ resource "aws_s3_object" "anne_test_website_html" {
   content_type = "text/html"
 }
 
+#Upload the photo and video being used by the website.
 resource "aws_s3_object" "anne_test_website_video" {
   for_each = fileset("../website/video/", "*")
   bucket   = aws_s3_bucket.anne_test_website.id

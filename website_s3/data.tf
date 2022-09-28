@@ -1,3 +1,4 @@
+# The IAM policy "allow-public-access" is used in the scenario where only S3 bucket being used to host the website therefore it needs to be accessible by public.
 #data "aws_iam_policy_document" "allow-public-access" {
 #  statement {
 #    principals {
@@ -19,6 +20,7 @@
 #}
 
 
+#Currently there are still 2 statements being used one for public access under this AWS account, one for AWS cloudfront permission, maybe it needs refactor later.
 data "aws_iam_policy_document" "allow_cloudfront_access" {
   statement {
     effect = "Allow"
