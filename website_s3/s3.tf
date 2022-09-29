@@ -23,6 +23,20 @@ resource "aws_s3_bucket_acl" "anne_test_website_s3_acl" {
   acl    = "private"
 }
 
+# When block the public website, the website hosted by AWS won't be available anymore, but the Cloudfront Domain name should still serve.
+# In my case, when not having the aws_s3_bucket_public_access_block block, both URL will serve including:
+# http://anne-test-website.s3-website-ap-southeast-2.amazonaws.com/ and https://d2mdotld4x2t9s.cloudfront.net/
+# After having the following block, only the later URL provided by cloudfront will be available. The former one won't work.
+# However it also means there is no access to upload the s3 object to the s3 bucket. Therefore I comment this block out. And now both URL should work.
+
+#resource "aws_s3_bucket_public_access_block" "anne_test_website_block_public_Access" {
+#  bucket = aws_s3_bucket.anne_test_website.id
+#  block_public_acls       = true
+#  block_public_policy     = true
+#  ignore_public_acls      = true
+#  restrict_public_buckets = true
+#}
+
 resource "aws_s3_bucket_website_configuration" "anne_test_website_s3_configuration" {
   bucket = aws_s3_bucket.anne_test_website.id
   index_document {
