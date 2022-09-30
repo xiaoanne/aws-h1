@@ -28,14 +28,16 @@ resource "aws_s3_bucket_acl" "anne_test_website_s3_acl" {
 # http://anne-test-website.s3-website-ap-southeast-2.amazonaws.com/ and https://d2mdotld4x2t9s.cloudfront.net/
 # After having the following block, only the later URL provided by cloudfront will be available. The former one won't work.
 # However it also means there is no access to upload the s3 object to the s3 bucket. Therefore I comment this block out. And now both URL should work.
+#https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html
+#By default, new buckets, access points, and objects don't allow public access. However, users can modify bucket policies, access point policies, or object permissions to allow public access. S3 Block Public Access settings override these policies and permissions so that you can limit public access to these resources.
 
-#resource "aws_s3_bucket_public_access_block" "anne_test_website_block_public_Access" {
-#  bucket = aws_s3_bucket.anne_test_website.id
-#  block_public_acls       = true
-#  block_public_policy     = true
-#  ignore_public_acls      = true
-#  restrict_public_buckets = true
-#}
+resource "aws_s3_bucket_public_access_block" "anne_test_website_block_public_Access" {
+  bucket = aws_s3_bucket.anne_test_website.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = false
+  restrict_public_buckets = true
+}
 
 resource "aws_s3_bucket_website_configuration" "anne_test_website_s3_configuration" {
   bucket = aws_s3_bucket.anne_test_website.id
@@ -63,12 +65,12 @@ resource "aws_s3_object" "anne_test_website_html" {
   content_type = "text/html"
 }
 
-#Upload the photo and video being used by the website.
+#Upload the photo and video being used by the website. Comment out etag as s3 bucket denies as terrafrom think anne.mp4 is a new video.
 resource "aws_s3_object" "anne_test_website_video" {
   for_each = fileset("../website/video/", "*")
   bucket   = aws_s3_bucket.anne_test_website.id
   key      = each.value
   source   = "../website/video/${each.value}"
-  etag     = filemd5("../website/video/${each.value}")
+#  etag     = filemd5("../website/video/${each.value}")
   acl      = "public-read"
 }

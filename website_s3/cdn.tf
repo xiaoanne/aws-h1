@@ -7,9 +7,13 @@ resource "aws_cloudfront_distribution" "anne_s3_distribution" {
     domain_name = aws_s3_bucket.anne_test_website.bucket_regional_domain_name
     origin_id   = local.s3_origin_id
 
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.anne_test_website_cdn_origin_id.cloudfront_access_identity_path
-    }
+    origin_access_control_id = aws_cloudfront_origin_access_control.anne_website_cdn_access_control.id
+
+#    this is to use the Cloudfront OAI rather than recommended origin access control
+#    s3_origin_config {
+#      origin_access_identity = aws_cloudfront_origin_access_identity.anne_test_website_cdn_origin_id.cloudfront_access_identity_path
+#      origin_access_identity = aws_cloudfront_origin_access_control.anne_website_cdn_access_control.
+#    }
   }
 
   enabled             = true
