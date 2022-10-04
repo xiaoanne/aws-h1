@@ -19,7 +19,7 @@ resource "aws_route_table" "anne_rt" {
 }
 
 resource "aws_route_table_association" "anne_tb_association" {
-  count = length(local.private_subnet)
+  count          = length(local.private_subnet)
   route_table_id = aws_route_table.anne_rt.id
-  subnet_id = aws_subnet.private[count.index].id
+  subnet_id      = aws_subnet.private[count.index].id
 }

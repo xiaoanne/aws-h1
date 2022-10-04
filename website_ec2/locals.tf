@@ -33,9 +33,9 @@ locals {
 
 locals {
   ports_in = [
-    443,
+    22,
     80,
-    23
+    443,
   ]
   ports_out = [
     0
