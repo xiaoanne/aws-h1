@@ -13,3 +13,13 @@ variable "id" {
   default = "064782962204"
 }
 
+variable "tf_version" {
+  type    = string
+  default = ">= 1.2.0"
+}
+
+variable "aws_version" {
+  type = string
+  default = "~> 4.16"
+}
+
