@@ -11,11 +11,33 @@ resource "aws_instance" "anne_test_website_ec2" {
     Name = "anne"
   }
 
+  provisioner "local-exec" {
+    command = "chmod 400 anne.pem"
+  }
+
   provisioner "remote-exec" {
     inline = [
+      "mkdir /tmp/html",
       "sudo yum install httpd -y",
       "sudo service httpd start",
       "sudo service httpd status",
+    ]
+  }
+
+  provisioner "file" {
+    source      = "../website/helloworld/"
+    destination = "/tmp/html"
+  }
+
+  provisioner "file" {
+    source      = "../website/video/"
+    destination = "/tmp/html"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo mv /tmp/html/* /var/www/html",
+      "ls /var/www/html",
     ]
   }
 
