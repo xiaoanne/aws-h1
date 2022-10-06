@@ -1,14 +1,4 @@
-# This .tf file is used to create the s3 bucket and its policy as required.
-
-#resource "aws_vpc" "anne-test-1" {
-#  cidr_block       = "10.0.0.0/16"
-#  instance_tenancy = "default"
-#
-#  tags = {
-#    Name = "anne"
-#  }
-#}
-
+#create s3 bucket so the EC2 instance can download html files and related images and videos.
 
 resource "aws_s3_bucket" "anne_test_website" {
   bucket = local.s3_bucket_name
@@ -23,29 +13,12 @@ resource "aws_s3_bucket_acl" "anne_test_website_s3_acl" {
   acl    = "private"
 }
 
-# Set block_public_acls to false so that uploading .html and media work without being access denied in the first time to deploy, then set it to true to prevent public access.
-# Set ignore_public_acls to false so that the access to the HTML file works without being denied or 404 not found.
 resource "aws_s3_bucket_public_access_block" "anne_test_website_block_public_Access" {
   bucket = aws_s3_bucket.anne_test_website.id
   block_public_acls       = false
   block_public_policy     = true
   ignore_public_acls      = false
   restrict_public_buckets = true
-}
-
-resource "aws_s3_bucket_website_configuration" "anne_test_website_s3_configuration" {
-  bucket = aws_s3_bucket.anne_test_website.id
-  index_document {
-    suffix = "index.html"
-  }
-  error_document {
-    key = "error.html"
-  }
-}
-
-resource "aws_s3_bucket_policy" "allow_public_access" {
-  bucket = aws_s3_bucket.anne_test_website.id
-  policy = data.aws_iam_policy_document.allow_cloudfront_access.json
 }
 
 #Upload the index and error html files.

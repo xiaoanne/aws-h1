@@ -3,6 +3,11 @@ locals {
 }
 
 locals {
+  s3_bucket_name = "anne-test-website"
+}
+
+
+locals {
   name = "anne_test_website"
 }
 
