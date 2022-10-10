@@ -16,19 +16,19 @@ resource "aws_lb_target_group" "anne_lb_tg" {
   }
 }
 
-resource "aws_lb_target_group_attachment" "anne_lb_tg_attachment" {
-  count            = length(local.private_subnet)
-  target_group_arn = aws_lb_target_group.anne_lb_tg.arn
-  target_id        = aws_instance.anne_test_website_ec2[count.index].id
-  port             = 80
-}
+#resource "aws_lb_target_group_attachment" "anne_lb_tg_attachment" {
+#  target_group_arn = aws_lb_target_group.anne_lb_tg.arn
+##  target_id        = aws_instance.anne_test_website_ec2[count.index].id
+#  target_id        = aws_autoscaling_group.anne_test-asg.id
+#  port             = 80
+#}
 
 resource "aws_lb" "anne_test_website_lb_target_group" {
   name               = "anne-lb-target-group"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.allow_web.id]
-  subnets            = [for subnet in aws_subnet.private : subnet.id]
+  subnets            = [aws_subnet.private_1.id, aws_subnet.private_2.id]
 
   tags = {
     name = "anne"

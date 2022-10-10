@@ -1,41 +1,98 @@
-resource "aws_launch_template" "anne_test_asg_template" {
-  count         = length(local.private_subnet)
+# Here you can choose either to use aws_launch_template or aws_launch_configuration as template is recommended in AWS.
+resource "aws_launch_template" "anne_test_asg_template" { # Not specifying the name due to terraform complaining about launch template being used already.
+  name          = "anne-template-sunbet-1"
   image_id      = local.ec2_ami
   instance_type = local.ec2_type
   key_name      = aws_key_pair.kp.key_name
 
   network_interfaces {
-    security_groups             = [aws_security_group.allow_web.id]
-    subnet_id                   = aws_subnet.private[count.index].id
+    security_groups             = [aws_security_group.allow_web.id] # if not specified in network interface, need to use vpc_security_group_ids attribute.
+    subnet_id                   = aws_subnet.private_1.id
     associate_public_ip_address = true
-  }
-
-  placement {
-    availability_zone = data.aws_availability_zones.available.names[count.index]
   }
 
   lifecycle {
     create_before_destroy = true
   }
 
-  user_data = filebase64("web.conf")
+  user_data = filebase64("web.conf") # use filebase64 not file() function to avoid error of expecting base64encode format.
+}
+
+resource "aws_launch_template" "anne_test_asg_template_2" { # Not specifying the name due to terraform complaining about launch template being used already.
+  name          = "anne-template-sunbet-2"
+  image_id      = local.ec2_ami
+  instance_type = local.ec2_type
+  key_name      = aws_key_pair.kp.key_name
+
+  network_interfaces {
+    security_groups             = [aws_security_group.allow_web.id] # if not specified in network interface, need to use vpc_security_group_ids attribute.
+    subnet_id                   = aws_subnet.private_2.id
+    associate_public_ip_address = true
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  user_data = filebase64("web.conf") # use filebase64 not file() function to avoid error of expecting base64encode format.
 }
 
 resource "aws_autoscaling_group" "anne_test-asg" {
-  count            = length(local.private_subnet)
-  max_size         = 6
-  min_size         = 2
-  desired_capacity = 2
+  max_size         = 3
+  min_size         = 1
+  desired_capacity = 1
   launch_template {
-    id      = aws_launch_template.anne_test_asg_template[count.index].id
+    id      = aws_launch_template.anne_test_asg_template.id
     version = "$Latest"
   }
-  health_check_type         = "ELB"
+  health_check_type         = "EC2" #Can start with "EC2" type for troubleshooting and then enable Load balancer later on.
   health_check_grace_period = 60
   target_group_arns         = [aws_lb_target_group.anne_lb_tg.arn]
+  #  availability_zones        = [data.aws_availability_zones.available.id]
 }
 
-#resource "aws_autoscaling_policy" "anne_test_asg_up" {
-#  autoscaling_group_name = ""
-#  name                   = ""
-#}
+resource "aws_autoscaling_policy" "anne_test_asg_up" {
+  autoscaling_group_name = aws_autoscaling_group.anne_test-asg.name
+  name                   = "anne-tst-asg-scale-up"
+  scaling_adjustment     = 1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 60
+  policy_type            = "SimpleScaling"
+}
+
+resource "aws_cloudwatch_metric_alarm" "anne_test_asg_up_cpu" {
+  alarm_name          = "anne-test-alarm-asg-up"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = 120
+  statistic           = "Average"
+  threshold           = 60
+  actions_enabled     = true
+  alarm_actions       = [aws_autoscaling_policy.anne_test_asg_up.arn]
+  dimensions          = { AutoScalingGroupName = aws_autoscaling_group.anne_test-asg.name }
+}
+
+resource "aws_autoscaling_policy" "anne_test_asg_down" {
+  autoscaling_group_name = aws_autoscaling_group.anne_test-asg.name
+  name                   = "anne-tst-asg-scale-down"
+  scaling_adjustment     = -1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 60
+  policy_type            = "SimpleScaling"
+}
+
+resource "aws_cloudwatch_metric_alarm" "anne_test_asg_down_cpu" {
+  alarm_name          = "anne-test-alarm-asg-down"
+  comparison_operator = "LessThanOrEqualToThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = 120
+  statistic           = "Average"
+  threshold           = 10
+  actions_enabled     = true
+  alarm_actions       = [aws_autoscaling_policy.anne_test_asg_down.arn]
+  dimensions          = { AutoScalingGroupName = aws_autoscaling_group.anne_test-asg.name }
+}

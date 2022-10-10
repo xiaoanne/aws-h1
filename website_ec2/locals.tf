@@ -20,14 +20,16 @@ locals {
 }
 
 locals {
-  #  private_subnet = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  private_subnet = ["10.0.1.0/24", "10.0.2.0/24"]
+  available_zone_3 = "ap-southeast-2c"
 }
 
-#locals {
-#  type        = "list"
-#  private_ips = ["10.0.1.1", "10.0.2.1"]
-#}
+locals {
+  #  dic = {
+  #    "sub": ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  ##    "az": ["ap-southeast-1", "ap-southeast-2", "ap-southeast-3"]
+  #  }
+  private_subnet = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+}
 
 locals {
   ec2_ami = "ami-067e6178c7a211324"
