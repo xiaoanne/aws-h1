@@ -27,9 +27,9 @@ data "aws_iam_policy_document" "allow_cloudfront_access" {
     principals {
       type        = "Service"
       identifiers = ["cloudfront.amazonaws.com"]
-#      This is another way if you want  to specify which cloudfront distribution should have the access
-#      type        = "AWS"
-#      identifiers = ["arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity E2TY94BR958B3S"]
+      #      This is another way if you want  to specify which cloudfront distribution should have the access
+      #      type        = "AWS"
+      #      identifiers = ["arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity E2TY94BR958B3S"]
     }
 
     actions = [

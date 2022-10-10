@@ -14,7 +14,7 @@ resource "aws_s3_bucket_acl" "anne_test_website_s3_acl" {
 }
 
 resource "aws_s3_bucket_public_access_block" "anne_test_website_block_public_Access" {
-  bucket = aws_s3_bucket.anne_test_website.id
+  bucket                  = aws_s3_bucket.anne_test_website.id
   block_public_acls       = false
   block_public_policy     = true
   ignore_public_acls      = false
@@ -38,6 +38,6 @@ resource "aws_s3_object" "anne_test_website_video" {
   bucket   = aws_s3_bucket.anne_test_website.id
   key      = each.value
   source   = "../website/video/${each.value}"
-#  etag     = filemd5("../website/video/${each.value}")
-  acl      = "public-read"
+  #  etag     = filemd5("../website/video/${each.value}")
+  acl = "public-read"
 }

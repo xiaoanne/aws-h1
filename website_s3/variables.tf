@@ -19,7 +19,7 @@ variable "tf_version" {
 }
 
 variable "aws_version" {
-  type = string
+  type    = string
   default = "~> 4.16"
 }
 
