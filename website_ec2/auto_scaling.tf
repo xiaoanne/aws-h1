@@ -1,32 +1,13 @@
 # Here you can choose either to use aws_launch_template or aws_launch_configuration as template is recommended in AWS.
 resource "aws_launch_template" "anne_test_asg_template" { # Not specifying the name due to terraform complaining about launch template being used already.
-  name          = "anne-template-sunbet-1"
+  name          = "anne-template"
   image_id      = local.ec2_ami
   instance_type = local.ec2_type
   key_name      = aws_key_pair.kp.key_name
 
   network_interfaces {
-    security_groups             = [aws_security_group.allow_web.id] # if not specified in network interface, need to use vpc_security_group_ids attribute.
-    subnet_id                   = aws_subnet.private_1.id
-    associate_public_ip_address = true
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  user_data = filebase64("web.conf") # use filebase64 not file() function to avoid error of expecting base64encode format.
-}
-
-resource "aws_launch_template" "anne_test_asg_template_2" { # Not specifying the name due to terraform complaining about launch template being used already.
-  name          = "anne-template-sunbet-2"
-  image_id      = local.ec2_ami
-  instance_type = local.ec2_type
-  key_name      = aws_key_pair.kp.key_name
-
-  network_interfaces {
-    security_groups             = [aws_security_group.allow_web.id] # if not specified in network interface, need to use vpc_security_group_ids attribute.
-    subnet_id                   = aws_subnet.private_2.id
+    security_groups = [aws_security_group.allow_web.id] # if not specified in network interface, need to use vpc_security_group_ids attribute.
+    #    subnet_id                   = aws_subnet.private_1.id # no need to specify subnet so the scaled up instance can locate in different subnets/AZs.
     associate_public_ip_address = true
   }
 
@@ -45,10 +26,10 @@ resource "aws_autoscaling_group" "anne_test-asg" {
     id      = aws_launch_template.anne_test_asg_template.id
     version = "$Latest"
   }
+  vpc_zone_identifier       = [aws_subnet.private_1.id, aws_subnet.private_2.id, aws_subnet.private_3.id]
   health_check_type         = "EC2" #Can start with "EC2" type for troubleshooting and then enable Load balancer later on.
   health_check_grace_period = 60
   target_group_arns         = [aws_lb_target_group.anne_lb_tg.arn]
-  #  availability_zones        = [data.aws_availability_zones.available.id]
 }
 
 resource "aws_autoscaling_policy" "anne_test_asg_up" {

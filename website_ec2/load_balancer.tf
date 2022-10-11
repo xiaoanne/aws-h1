@@ -28,7 +28,7 @@ resource "aws_lb" "anne_test_website_lb_target_group" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.allow_web.id]
-  subnets            = [aws_subnet.private_1.id, aws_subnet.private_2.id]
+  subnets            = [aws_subnet.private_1.id, aws_subnet.private_2.id, aws_subnet.private_3.id]
 
   tags = {
     name = "anne"
