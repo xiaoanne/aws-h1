@@ -68,6 +68,13 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
+    - name: List the directory
+      run: |
+        dir
+        pwd
+        cd aws-h1/website_ec2
+        dir
+
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
