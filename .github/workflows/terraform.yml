@@ -76,7 +76,7 @@ jobs:
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init/Plan/Apply
-      if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
+#      if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
       run: |
         cd website_ec2
         terraform fmt -check
