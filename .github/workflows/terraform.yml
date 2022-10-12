@@ -44,6 +44,7 @@ jobs:
     - name: Terraform Init/Plan/Apply
       run: |
         cd website_s3
+        terraform destroy -auto-destroy
         terraform fmt -check
         terraform init
         terraform plan -input=false
