@@ -1,6 +1,6 @@
 # This .tf file creates the aws cloudfront infra.
 
-resource "aws_cloudfront_origin_access_identity" "anne_test_website_cdn_origin_id" {}
+#resource "aws_cloudfront_origin_access_identity" "anne_test_website_cdn_origin_id" {}
 
 resource "aws_cloudfront_distribution" "anne_s3_distribution" {
   origin {
