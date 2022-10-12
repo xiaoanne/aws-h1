@@ -7,26 +7,24 @@ resource "aws_launch_template" "anne_test_asg_template" { # Not specifying the n
 
   network_interfaces {
     security_groups = [aws_security_group.allow_web.id] # if not specified in network interface, need to use vpc_security_group_ids attribute.
-    #    subnet_id                   = aws_subnet.private_1.id # no need to specify subnet so the scaled up instance can locate in different subnets/AZs.
+    #    subnet_id                   = aws_subnet.private_3.id           # no need to specify subnet so the scaled up instance can locate in different subnets/AZs.
     associate_public_ip_address = true
   }
 
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  user_data = filebase64("web.conf") # use filebase64 not file() function to avoid error of expecting base64encode format.
+  user_data  = filebase64("web.conf") # use filebase64 not file() function to avoid error of expecting base64encode format.
+  depends_on = [aws_key_pair.kp, tls_private_key.anne_key_pair]
 }
 
 resource "aws_autoscaling_group" "anne_test-asg" {
-  max_size         = 3
+  name             = "anne_test_asg_group"
+  max_size         = 6
   min_size         = 1
-  desired_capacity = 1
+  desired_capacity = 3
   launch_template {
     id      = aws_launch_template.anne_test_asg_template.id
     version = "$Latest"
   }
-  vpc_zone_identifier       = [aws_subnet.private_1.id, aws_subnet.private_2.id, aws_subnet.private_3.id]
+  vpc_zone_identifier       = local.private_subnets[*].id
   health_check_type         = "EC2" #Can start with "EC2" type for troubleshooting and then enable Load balancer later on.
   health_check_grace_period = 60
   target_group_arns         = [aws_lb_target_group.anne_lb_tg.arn]

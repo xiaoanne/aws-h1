@@ -14,4 +14,8 @@ resource "aws_key_pair" "kp" {
   provisioner "local-exec" { # Create a "anne.pem" to your computer!!
     command = "echo '${tls_private_key.anne_key_pair.private_key_pem}' > ./anne.pem"
   }
+
+  provisioner "local-exec" {
+    command = "chmod 400 anne.pem"
+  }
 }

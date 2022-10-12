@@ -11,24 +11,21 @@ locals {
   name = "anne_test_website"
 }
 
-locals {
-  available_zone_1 = "ap-southeast-2a"
-}
+#locals {
+#  available_zone_1 = "ap-southeast-2a"
+#}
+#
+#locals {
+#  available_zone_2 = "ap-southeast-2b"
+#}
+#
+#locals {
+#  available_zone_3 = "ap-southeast-2c"
+#}
 
 locals {
-  available_zone_2 = "ap-southeast-2b"
-}
-
-locals {
-  available_zone_3 = "ap-southeast-2c"
-}
-
-locals {
-  #  dic = {
-  #    "sub": ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  ##    "az": ["ap-southeast-1", "ap-southeast-2", "ap-southeast-3"]
-  #  }
-  private_subnet = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  private_subnet  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  private_subnets = [aws_subnet.private_1, aws_subnet.private_2, aws_subnet.private_3]
 }
 
 locals {
