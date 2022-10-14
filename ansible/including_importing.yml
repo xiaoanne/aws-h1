@@ -1,0 +1,97 @@
+---
+- name: Configure web server
+  hosts: servera.lab.example.com
+
+  tasks:
+    - name: Include the environment task file and set the variables
+      include_tasks: tasks/environment.yml
+      vars:
+        package: httpd
+        service: httpd
+
+    - name: Import the firewall task file and set the variables
+      import_tasks: tasks/firewall.yml
+      vars:
+        firewall_pkg: firewalld
+        firewall_svc: firewalld
+        rule:
+          - http
+          - https
+
+    - name: Import the placeholder task file and set the variable
+      import_tasks: tasks/placeholder.yml
+      vars:
+        file: /var/www/html/index.html
+
+- name: Import test play file and set the variable
+  import_playbook: plays/test.yml
+  vars:
+    url: 'http://servera.lab.example.com'
+
+
+
+---
+- name: Install and configure web service
+  hosts: server*.lab.example.com
+
+  tasks:
+    - name: Import the web_tasks.yml task file
+      import_tasks: tasks/web_tasks.yml
+
+    - name: Import the firewall_tasks.yml task file
+      import_tasks: tasks/firewall_tasks.yml
+
+  handlers:
+    - name: restart httpd
+      service:
+        name: httpd
+        state: restarted
+---
+- name: Prepare the web server
+  import_playbook: web.yml
+
+- name: Prepare the database server
+  import_playbook: db.yml
+
+- name: Play 1
+  hosts: localhost
+  tasks:
+    - debug:
+        msg: Play 1
+
+- name: Import Playbook
+  import_playbook: play2.yml
+
+---
+- name: Install web server
+  hosts: webservers
+  tasks:
+  - import_tasks: webserver_tasks.yml
+
+---
+- name: Install web server
+  hosts: webservers
+  tasks:
+  - include_tasks: webserver_tasks.yml
+
+---
+  - name: Install the {{ package }} package
+    yum:
+      name: "{{ package }}"
+      state: latest
+  - name: Start the {{ service }} service
+    service:
+      name: "{{ service }}"
+      enabled: true
+      state: started
+    tasks:
+      - name: Import task file and set variables
+        import_tasks: task.yml
+        vars:
+          package: httpd
+          service: httpd
+
+      - name: Import play file and set the variable
+        import_playbook: play.yml
+        vars:
+          package: mariadb
