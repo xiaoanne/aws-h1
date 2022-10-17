@@ -1,0 +1,97 @@
+- name: Creates a volume group
+  lvg:
+    vg: vg1 1
+    pvs: /dev/vda1 2
+    pesize: 32
+
+- name: Resize a volume group
+  lvg:
+    vg: vg1
+    pvs: /dev/vdb1,/dev/vdc1
+
+- name: Create a logical volume of 2GB
+  lvol:
+    vg: vg1 1
+    lv: lv1 2
+    size: 2g
+
+- name: Create an XFS filesystem
+  filesystem:
+    fstype: xfs 1
+    dev: /dev/vdb1
+
+- name: Mount device with ID
+  mount:
+    path: /data 1
+    src: UUID=a8063676-44dd-409a-b584-68be2c9f5570 2
+    fstype: xfs 3
+    state: present
+
+- name: Mount NFS share
+  mount:
+    path: /nfsshare
+    src: 172.25.250.100:/share
+    fstype: nfs
+    opts: defaults
+    dump: '0'
+    passno: '0'
+    state: mounted
+
+
+
+============================
+---
+- name: Ensure Apache Storage Configuration
+  hosts: webservers
+  vars_files:
+    - storage_vars.yml
+  tasks:
+    - name: Correct partitions exist on /dev/vdb
+      parted:
+        device: /dev/vdb
+        state: present
+        number: "{{ item.number }}"
+        part_start: "{{ item.start }}"
+        part_end: "{{ item.end }}"
+      loop: "{{ partitions }}"
+
+    - name: Ensure Volume Groups Exist
+      lvg:
+        vg: "{{ item.name }}"
+        pvs: "{{ item.devices }}"
+      loop: "{{  volume_groups }}"
+
+    - name: Create each Logical Volume (LV) if needed
+      lvol:
+        vg: "{{ item.vgroup }}"
+        lv: "{{ item.name }}"
+        size: "{{ item.size }}"
+      loop: "{{ logical_volumes }}"
+      when: item.name not in ansible_lvm["lvs"]
+
+    - name: Ensure XFS Filesystem exists on each LV
+      filesystem:
+        dev: "/dev/{{ item.vgroup }}/{{ item.name }}"
+        fstype: xfs
+      loop: "{{ logical_volumes }}"
+
+    - name: Ensure the correct capacity for each LV
+      lvol:
+        vg: "{{ item.vgroup }}"
+        lv: "{{ item.name }}"
+        size: "{{ item.size }}"
+        resizefs: yes
+        force: yes
+      loop: "{{ logical_volumes }}"
+
+    - name: Each Logical Volume is mounted
+      mount:
+        path: "{{ item.mount_path }}"
+        src: "/dev/{{ item.vgroup }}/{{ item.name }}"
+        fstype: xfs
+        opts: noatime
+        state: mounted
+      loop: "{{ logical_volumes }}"
+
+
+

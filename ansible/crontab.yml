@@ -1,0 +1,65 @@
+---
+- name: Recurring cron job
+  hosts: webservers
+  become: true
+  tasks:
+    - name: Crontab file exists
+      cron:
+        name: Add date and time to a file
+        minute: "*/2"   #Configure the job to run every two minutes between 09:00 and 16:59 on Monday through Friday.
+        hour: 9-16
+        weekday: 1-5
+        user: devops
+        job: date >> /home/devops/my_date_time_cron_job
+        cron_file: add-date-time
+        state: present
+
+
+-----------Remove cron job---------
+---
+- name: Remove scheduled cron job
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Cron job removed
+      cron:
+        name: Add date and time to a file
+        user: devops
+        cron_file: add-date-time
+        state: absent
+
+
+-----------Schedule at task------------
+---
+- name: Schedule at task
+  hosts: webservers
+  become: true
+  become_user: devops
+
+  tasks:
+    - name: Create date and time file
+      at:
+        command: "date > ~/my_at_date_time\n"
+        count: 1
+        units: minutes
+        unique: yes
+        state: present
+
+
+-----------Reboot-----------
+---
+- name: Reboot hosts
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Hosts are rebooted
+      reboot:
+
+
+
+
+
+
+
