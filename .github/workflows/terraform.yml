@@ -27,7 +27,7 @@ jobs:
       uses: actions/checkout@v3
 
     # Set the default directory to website_s3
-    - name: Set working directory
+#    - name: Set working directory
       working-directory: ./website_s3
 
     # Set the AWS access key and secret access key
