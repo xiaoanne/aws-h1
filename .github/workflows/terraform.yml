@@ -14,9 +14,9 @@ jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    environment: production
+    environment: dev
 
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    # Use the Bash shell, set working directory
     defaults:
       run:
         shell: bash
@@ -26,9 +26,6 @@ jobs:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v3
-
-    # Set the default directory to website_s3
-#    - name: Set working directory
 
     # Set the AWS access key and secret access key
     - name: Configure AWS Credentials
@@ -44,17 +41,24 @@ jobs:
       with:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    # Initialize a new or existing Terraform working directory, run the plan to generate tfplan.out for terraform apply to use
     - name: Terraform Init/Plan
       run: |
         terraform fmt -check
         terraform init
-        terraform plan -input=false out=tfplan.out
+        terraform plan -input=false -out=tfplan.out
 
-#-------Approve------
+    # The assigned approvers need to manually approve to proceed with terraform apply
+    - name: Manual approve
+      uses: trstringer/manual-approval@v1
+      with:
+        secret: ${{ github.TOKEN }}
+        approvers: xiaoanne,acdunnigan
+        minimum-approvals: 1
 
+    # Apply and/or destroy the infrastructure
     - name: Terraform Apply/Destroy
       run: |
-        terraform apply tfplan.out -input=false
+        terraform apply tfplan.out
         sleep 60
-        terraform destroy -auto-approve -input=false
+        terraform destroy -auto-approve
