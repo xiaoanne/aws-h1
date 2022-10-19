@@ -14,12 +14,7 @@ jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-#    runs-on: ${{ matrix.os }}
-#    strategy:
-#      matrix:
-#        os: [ ubuntu-latest, windows-latest, macOS-latest ]
-    environment: dev
-
+    environment: production
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -30,6 +25,10 @@ jobs:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v3
+
+    # Set the default directory to website_s3
+    - name: Set working directory
+      working-directory: ./website_s3
 
     # Set the AWS access key and secret access key
     - name: Configure AWS Credentials
@@ -46,12 +45,16 @@ jobs:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-    - name: Terraform Init/Plan/Apply
+    - name: Terraform Init/Plan
       run: |
-        cd website_s3
         terraform fmt -check
         terraform init
-        terraform plan -input=false
-        terraform apply -auto-approve -input=false
+        terraform plan -input=false out=tfplan.out
+
+#-------Approve------
+
+    - name: Terraform Apply/Destroy
+      run: |
+        terraform apply tfplan.out -input=false
         sleep 60
         terraform destroy -auto-approve -input=false
