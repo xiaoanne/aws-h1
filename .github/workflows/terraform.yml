@@ -53,8 +53,8 @@ jobs:
       uses: trstringer/manual-approval@v1
       with:
         secret: ${{ github.TOKEN }}
-        approvers: xiaoanne,acdunnigan
-        minimum-approvals: 1
+        approvers: xiaoanne
+        minimum-approvals: 0
 
     # Apply and/or destroy the infrastructure
     - name: Terraform Apply/Destroy
