@@ -58,3 +58,11 @@ ansible demohost -m command -a 'df'
 ansible webservers -m setup -a 'filter=ansible_devices'
 ansible webservers -m setup -a 'filter=ansible_device_links'
 ansible webservers -m setup -a 'filter=ansible_mounts'
+
+
+
+-----List host------
+ansible-inventory --list all
+
+------------Create roles structure---------
+ansible-galaxy init ansible-vsftpd

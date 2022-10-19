@@ -84,3 +84,4 @@
         owner: root
         group: root
         mode: 0644
+        setype: etc_t
