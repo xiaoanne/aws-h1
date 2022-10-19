@@ -20,6 +20,7 @@ jobs:
     defaults:
       run:
         shell: bash
+        working-directory: ./website_s3
 
     steps:
     # Checkout the repository to the GitHub Actions runner
@@ -28,7 +29,6 @@ jobs:
 
     # Set the default directory to website_s3
 #    - name: Set working directory
-      working-directory: ./website_s3
 
     # Set the AWS access key and secret access key
     - name: Configure AWS Credentials
