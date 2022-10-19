@@ -1,0 +1,87 @@
+---
+- name: Touch a file and set permissions
+  file:
+    path: /path/to/file
+    owner: user1
+    group: group1
+    mode: 0640
+    state: touch
+
+- name: SELinux type is set to samba_share_t
+  file:
+    path: /path/to/samba_file
+    setype: samba_share_t
+
+- name: SELinux type is persistently set to samba_share_t
+  sefcontext:
+    target: /path/to/samba_file
+    setype: samba_share_t
+    state: present
+
+
+- name: Copy a file to managed hosts
+  copy:
+    src: file
+    dest: /path/to/file
+
+- name: Retrieve SSH key from reference host
+  fetch:
+    src: "/home/{{ user }}/.ssh/id_rsa.pub"
+    dest: "files/keys/{{ user }}.pub"
+
+- name: Add a line of text to a file
+  lineinfile:
+    path: /path/to/file
+    line: 'Add this line to the file'
+    state: present
+
+- name: Add additional lines to a file
+  blockinfile:
+    path: /path/to/file
+    block: |
+      First line in the additional block of text
+      Second line in the additional block of text
+    state: present
+
+- name: Make sure a file does not exist on managed hosts
+  file:
+    dest: /path/to/file
+    state: absent
+
+- name: Verify the checksum of a file
+  stat:
+    path: /path/to/file
+    checksum_algorithm: md5
+  register: result
+
+- debug
+    msg: "The checksum of the file is {{ result.stat.checksum }}"
+
+
+- name: synchronize local file to remote files
+  synchronize:
+    src: file
+    dest: /path/to/file
+
+  tasks:
+    - name: template render
+      template:
+        src: /tmp/j2-template.j2
+        dest: /tmp/dest-config-file.txt
+
+---
+- name: configure SOE
+  hosts: all
+  remote_user: devops
+  become: true
+  vars:
+    - system_owner: clyde@example.com
+  tasks:
+    - name: configure /etc/motd
+      template:
+        src: motd.j2
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: 0644
+        setype: etc_t

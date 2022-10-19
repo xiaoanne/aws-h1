@@ -1,0 +1,127 @@
+---
+- name: Loop Register Test
+  gather_facts: no
+  hosts: localhost
+  tasks:
+    - name: Looping Echo Task
+      shell: "echo This is my item: {{ item }}"
+      loop:
+        - one
+        - two
+      register: echo_results1
+
+    - name: Show echo_results variable
+      debug:
+        var: echo_results2
+
+- name: Demonstrate the "in" keyword
+  hosts: all
+  gather_facts: yes
+  vars:
+    supported_distros:
+      - RedHat
+      - Fedora
+  tasks:
+    - name: Install httpd using yum, where supported
+      yum:
+        name: http
+        state: present
+#      when: ansible_distribution in supported_distros
+      when:
+        - ansible_distribution_version == "7.5"
+        - ansible_kernel == "3.10.0-327.el7.x86_64"
+
+- name: install mariadb-server if enough space on root
+  yum:
+    name: mariadb-server
+    state: latest
+  loop: "{{ ansible_mounts }}"
+  when: item.mount == "/" and item.size_available > 300000000
+
+  tasks:
+    - name: copy demo.example.conf configuration template
+      template:
+        src: /var/lib/templates/demo.example.conf.template
+        dest: /etc/httpd/conf.d/demo.example.conf
+      notify:
+        - restart mysql
+        - restart apache
+
+  handlers:
+    - name: restart mysql
+      service:
+        name: mariadb
+        state: restarted
+
+    - name: restart apache
+      service:
+        name: httpd
+        state: restarted
+
+---
+- name: MariaDB server is installed
+  hosts: databases
+  vars:
+    db_packages:
+      - mariadb-server
+      - python3-PyMySQL
+    db_service: mariadb
+    resources_url: http://materials.example.com/labs/control-handlers
+    config_file_url: "{{ resources_url }}/my.cnf.standard"
+    config_file_dst: /etc/my.cnf
+  tasks:
+    - name: Latest version of notapkg is installed
+      yum:
+        name: notapkg
+        state: latest
+      ignore_errors: yes
+
+    - name: "{{ db_packages }} packages are installed"
+      yum:
+        name: "{{ db_packages }}"
+        state: present
+      notify:
+        - set db password
+
+    - name: Make sure the database service is running
+      service:
+        name: "{{ db_service }}"
+        state: started
+        enabled: true
+
+    - name: The {{ config_file_dst }} file has been installed
+      get_url:
+        url: "{{ config_file_url }}"
+        dest: "{{ config_file_dst }}"
+        owner: mysql
+        group: mysql
+        force: yes
+      notify:
+        - restart db service
+
+    - name: Upgrade DB
+      block:
+        - name: upgrade the database
+          shell:
+            cmd: /usr/local/lib/upgrade-database
+      rescue:
+        - name: revert the database upgrade
+          shell:
+            cmd: /usr/local/lib/revert-database
+      always:
+        - name: always restart the database
+          service:
+            name: mariadb
+            state: restarted
+
+
+  handlers:
+    - name: restart db service
+      service:
+        name: "{{ db_service }}"
+        state: restarted
+
+    - name: set db password
+      mysql_user:
+        name: root
+        password: redhat

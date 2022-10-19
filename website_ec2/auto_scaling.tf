@@ -18,7 +18,7 @@ resource "aws_launch_template" "anne_test_asg_template" { # Not specifying the n
 resource "aws_autoscaling_group" "anne_test-asg" {
   name             = "anne_test_asg_group"
   max_size         = 6
-  min_size         = 1
+  min_size         = 3
   desired_capacity = 3
   launch_template {
     id      = aws_launch_template.anne_test_asg_template.id

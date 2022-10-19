@@ -1,0 +1,24 @@
+---
+- name: Install and start Apache HTTPD
+  hosts: web
+
+  tasks:
+    - name: Ensure the httpd package is present
+      ansible.builtin.yum:
+        name: httpd
+        state: present
+
+    - name: Ensure the index.html file is present
+      ansible.builtin.copy:
+        src: files/index.html
+        dest: /var/www/html/index.html
+        owner: root
+        group: root
+        mode: 0644
+        setype: httpd_sys_content_t
+
+    - name: Ensure the httpd service is started
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true

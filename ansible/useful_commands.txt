@@ -1,0 +1,68 @@
+ls -l /usr/share/ansible/roles/
+
+ls -l /usr/share/doc/rhel-system-roles/
+
+ansible-galaxy list
+
+ ansible-doc timezone | grep -A 4 "EXAMPLES"
+
+ [user@host ~]$ tree roles/
+roles/
+└── motd
+    ├── defaults
+    │   └── main.yml
+    ├── files
+    ├── handlers
+    ├── meta
+    │   └── main.yml
+    ├── README.md
+    ├── tasks
+    │   └── main.yml
+    └── templates
+        └── motd.j2
+
+ansible-galaxy init my_new_role
+
+ansible webservers -a > 'systemctl is-active httpd'
+
+ansible webservers -a > 'cat /etc/httpd/conf.d/vhost.conf'
+
+ansible webservers -m uri > -a 'url=http://localhost return_content=true'
+
+ansible-galaxy search 'redis' --platforms EL
+
+ansible-galaxy info geerlingguy.redis
+
+ansible-galaxy install geerlingguy.redis -p roles/
+
+ansible-galaxy install -r roles/requirements.yml > -p roles
+
+ansible-galaxy remove nginx-acme-ssh
+
+ansible-galaxy collection install -r requirements.yml
+
+
+--------Troubleshooting-------------
+ansible-playbook play.yml --syntax-check
+ansible-playbook play.yml --step
+ansible-playbook play.yml --start-at-task="start httpd service"
+ansible-playbook -vvvv samba.yml
+grep -i fatal ansible.log
+ansible-playbook --check playbook.yml
+ansible demohost -m ping --become
+ansible demohost -m ping
+ansible demohost -m command -a 'free -m'
+ansible demohost -m command -a 'df'
+
+-------------Storage------------------
+ansible webservers -m setup -a 'filter=ansible_devices'
+ansible webservers -m setup -a 'filter=ansible_device_links'
+ansible webservers -m setup -a 'filter=ansible_mounts'
+
+
+
+-----List host------
+ansible-inventory --list all
+
+------------Create roles structure---------
+ansible-galaxy init ansible-vsftpd
