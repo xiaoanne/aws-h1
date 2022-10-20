@@ -52,7 +52,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: tfplan.out
-#        path: ./tfplan.out
+        path: tfplan.out
 
     - name: List
       run: |
