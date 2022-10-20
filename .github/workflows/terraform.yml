@@ -49,12 +49,18 @@ jobs:
         terraform plan -input=false -out=tfplan.out
 
     # The assigned approvers need to manually approve to proceed with terraform apply
-    - name: Manual approve
-      uses: trstringer/manual-approval@v1
+    - uses: trstringer/manual-approval@v1
       with:
         secret: ${{ github.TOKEN }}
         approvers: xiaoanne
         minimum-approvals: 1
+        issue-title: "Deploying v1.3.5 to prod from staging"
+#    - name: Manual approve
+#      uses: trstringer/manual-approval@v1
+#      with:
+#        secret: ${{ github.TOKEN }}
+#        approvers: xiaoanne
+#        minimum-approvals: 1
 
     # Apply and/or destroy the infrastructure
     - name: Terraform Apply/Destroy
