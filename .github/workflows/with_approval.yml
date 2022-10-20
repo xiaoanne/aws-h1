@@ -54,7 +54,7 @@ jobs:
         name: tfplan.out
         path: ./
 
-terraform:
+#terraform:
   apply:
     name: 'apply'
     runs-on: ubuntu-latest
