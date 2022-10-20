@@ -40,15 +40,15 @@ jobs:
       uses: hashicorp/setup-terraform@v1
       with:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-#
-#    # Initialize a new or existing Terraform working directory, run the plan to generate tfplan.out for terraform apply to use
-#  Init_Plan:
-#    - name: Terraform Init/Plan
-#      run: |
-#        terraform fmt -check
-#        terraform init
-#        terraform plan -input=false -out=tfplan.out
-#
+
+    # Initialize a new or existing Terraform working directory, run the plan to generate tfplan.out for terraform apply to use
+  Init_Plan:
+    - name: Terraform Init/Plan
+      run: |
+        terraform fmt -check
+        terraform init
+        terraform plan -input=false -out=tfplan.out
+
 #    # The assigned approvers need to manually approve to proceed with terraform apply
 #  Manual_approve:
 #    - uses: trstringer/manual-approval@v1
