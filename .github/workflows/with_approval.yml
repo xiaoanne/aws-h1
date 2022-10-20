@@ -56,12 +56,12 @@ jobs:
 
 #terraform:
   apply:
-    needs: plan
     name: 'apply'
+    needs: plan
     runs-on: ubuntu-latest
     environment: prod
 
-  steps:
+    steps:
     - name: Download tfplan.out
       uses: actions/download-artifact@v3
       with:
