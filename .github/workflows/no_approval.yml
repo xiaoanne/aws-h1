@@ -20,7 +20,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./website_ecs
+        working-directory: ./website_s3
 
     steps:
     # Checkout the repository to the GitHub Actions runner
@@ -53,4 +53,4 @@ jobs:
       run: |
         terraform apply tfplan.out
         sleep 10
-#        terraform destroy -auto-approve
+        terraform destroy -auto-approve
