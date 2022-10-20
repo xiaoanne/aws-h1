@@ -12,9 +12,9 @@ permissions:
 
 jobs:
   setup:
-    name: 'setup'
+    name: 'Terraform'
     runs-on: ubuntu-latest
-    environment: dev
+#    environment: dev
 
     # Use the Bash shell, set working directory
     defaults:
@@ -60,5 +60,5 @@ jobs:
     - name: Terraform Apply/Destroy
       run: |
         terraform apply tfplan.out
-        sleep 60
+        sleep 10
         terraform destroy -auto-approve
