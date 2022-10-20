@@ -55,6 +55,7 @@ jobs:
         approvers: xiaoanne
         minimum-approvals: 1
         issue-title: "Terraform apply"
+        environment: prod
 #    - name: Manual approve
 #      uses: trstringer/manual-approval@v1
 #      with:
