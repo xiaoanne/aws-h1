@@ -53,4 +53,4 @@ jobs:
       run: |
         terraform apply tfplan.out
         sleep 10
-        terraform destroy -auto-approve
+#        terraform destroy -auto-approve
