@@ -68,8 +68,13 @@ jobs:
     steps:
     - name: Download tfplan.out
       uses: actions/download-artifact@v3
-      with:
-        name: tfplan.out
+#      with:
+#        name: tfplan.out
+
+    - name: List
+      run: |
+        pwd
+        ls
 
     - name: Terraform Apply/Destroy
       run: |
