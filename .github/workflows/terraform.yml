@@ -42,36 +42,23 @@ jobs:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
     # Initialize a new or existing Terraform working directory, run the plan to generate tfplan.out for terraform apply to use
-  Init_Plan:
-    - name: 'Init'
-      runs-on: ubuntu-latest
-      environment: dev
-
     - name: Terraform Init/Plan
       run: |
         terraform fmt -check
         terraform init
         terraform plan -input=false -out=tfplan.out
 
-#    # The assigned approvers need to manually approve to proceed with terraform apply
-#  Manual_approve:
-#    - uses: trstringer/manual-approval@v1
-#      with:
-#        secret: ${{ github.TOKEN }}
-#        approvers: xiaoanne
-#        minimum-approvals: 1
-#        issue-title: "Terraform apply"
-#        environment: prod
-##    - name: Manual approve
-##      uses: trstringer/manual-approval@v1
-##      with:
-##        secret: ${{ github.TOKEN }}
-##        approvers: xiaoanne
-##        minimum-approvals: 1
-#
-#    # Apply and/or destroy the infrastructure
-#    - name: Terraform Apply/Destroy
-#      run: |
-#        terraform apply tfplan.out
-#        sleep 60
-#        terraform destroy -auto-approve
+    # The assigned approvers need to manually approve to proceed with terraform apply
+    - name: Manual approve
+      uses: trstringer/manual-approval@v1
+      with:
+        secret: ${{ github.TOKEN }}
+        approvers: xiaoanne
+        minimum-approvals: 1
+
+    # Apply and/or destroy the infrastructure
+    - name: Terraform Apply/Destroy
+      run: |
+        terraform apply tfplan.out
+        sleep 60
+        terraform destroy -auto-approve
