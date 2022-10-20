@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  terraform:
+  setup:
     name: 'Terraform'
     runs-on: ubuntu-latest
     environment: dev
@@ -40,32 +40,34 @@ jobs:
       uses: hashicorp/setup-terraform@v1
       with:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-    # Initialize a new or existing Terraform working directory, run the plan to generate tfplan.out for terraform apply to use
-    - name: Terraform Init/Plan
-      run: |
-        terraform fmt -check
-        terraform init
-        terraform plan -input=false -out=tfplan.out
-
-    # The assigned approvers need to manually approve to proceed with terraform apply
-    - uses: trstringer/manual-approval@v1
-      with:
-        secret: ${{ github.TOKEN }}
-        approvers: xiaoanne
-        minimum-approvals: 1
-        issue-title: "Terraform apply"
-        environment: prod
-#    - name: Manual approve
-#      uses: trstringer/manual-approval@v1
+#
+#    # Initialize a new or existing Terraform working directory, run the plan to generate tfplan.out for terraform apply to use
+#  Init_Plan:
+#    - name: Terraform Init/Plan
+#      run: |
+#        terraform fmt -check
+#        terraform init
+#        terraform plan -input=false -out=tfplan.out
+#
+#    # The assigned approvers need to manually approve to proceed with terraform apply
+#  Manual_approve:
+#    - uses: trstringer/manual-approval@v1
 #      with:
 #        secret: ${{ github.TOKEN }}
 #        approvers: xiaoanne
 #        minimum-approvals: 1
-
-    # Apply and/or destroy the infrastructure
-    - name: Terraform Apply/Destroy
-      run: |
-        terraform apply tfplan.out
-        sleep 60
-        terraform destroy -auto-approve
+#        issue-title: "Terraform apply"
+#        environment: prod
+##    - name: Manual approve
+##      uses: trstringer/manual-approval@v1
+##      with:
+##        secret: ${{ github.TOKEN }}
+##        approvers: xiaoanne
+##        minimum-approvals: 1
+#
+#    # Apply and/or destroy the infrastructure
+#    - name: Terraform Apply/Destroy
+#      run: |
+#        terraform apply tfplan.out
+#        sleep 60
+#        terraform destroy -auto-approve
