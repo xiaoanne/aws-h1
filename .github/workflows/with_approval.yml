@@ -48,16 +48,12 @@ jobs:
         terraform init
         terraform plan -input=false -out=tfplan.out
 
-    - name: List
-      run: |
-        pwd
-        ls
-
     - name: Upload tfplan.out
       uses: actions/upload-artifact@v3
       with:
         name: plan
         path: /home/runner/work/aws-h1/aws-h1/website_s3/tfplan.out
+
   apply:
     name: 'Terrform Apply'
     needs: plan
@@ -89,7 +85,7 @@ jobs:
     - name: Download tfplan.out
       uses: actions/download-artifact@v3
       with:
-        name: tfplan
+        name: plan
 
     - name: List
       run: |
