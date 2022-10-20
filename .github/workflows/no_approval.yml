@@ -1,56 +1,56 @@
-#name: 'Terraform_NoApproval'
-#
-#on:
-#  push:
-#    branches: #[ "main" ]
-#      - 'main'
-#      - 'test'
-#  pull_request:
-#
-#permissions:
-#  contents: read
-#
-#jobs:
-#  setup:
-#    name: 'Terraform'
-#    runs-on: ubuntu-latest
-#    environment: dev
-#
-#    # Use the Bash shell, set working directory
-#    defaults:
-#      run:
-#        shell: bash
-#        working-directory: ./website_s3
-#
-#    steps:
-#    # Checkout the repository to the GitHub Actions runner
-#    - name: Checkout
-#      uses: actions/checkout@v3
-#
-#    # Set the AWS access key and secret access key
-#    - name: Configure AWS Credentials
-#      uses: aws-actions/configure-aws-credentials@v1
-#      with:
-#        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#        aws-region: ap-southeast-2
-#
-#    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
-#    - name: Setup Terraform
-#      uses: hashicorp/setup-terraform@v1
-#      with:
-#        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-#
-#    # Initialize a new or existing Terraform working directory, run the plan to generate tfplan.out for terraform apply to use
-#    - name: Terraform Init/Plan
-#      run: |
-#        terraform fmt -check
-#        terraform init
-#        terraform plan -input=false -out=tfplan.out
-#
-#    # Apply and/or destroy the infrastructure
-#    - name: Terraform Apply/Destroy
-#      run: |
-#        terraform apply tfplan.out
-#        sleep 10
-#        terraform destroy -auto-approve
+name: 'Terraform_NoApproval'
+
+on:
+  push:
+    branches: #[ "main" ]
+      - 'main'
+      - 'test'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  setup:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment: dev
+
+    # Use the Bash shell, set working directory
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./website_ecs
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Set the AWS access key and secret access key
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-southeast-2
+
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+    # Initialize a new or existing Terraform working directory, run the plan to generate tfplan.out for terraform apply to use
+    - name: Terraform Init/Plan
+      run: |
+        terraform fmt -check
+        terraform init
+        terraform plan -input=false -out=tfplan.out
+
+    # Apply and/or destroy the infrastructure
+    - name: Terraform Apply/Destroy
+      run: |
+        terraform apply tfplan.out
+        sleep 10
+        terraform destroy -auto-approve
