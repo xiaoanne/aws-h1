@@ -51,7 +51,7 @@ jobs:
     - name: Upload tfplan.out
       uses: actions/upload-artifact@v3
       with:
-        name: artifact
+        name: tfplan
         path: ./tfplan.out
 
     - name: List
@@ -82,16 +82,15 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-southeast-2
 
-    - name: Download tfplan.out
-      uses: actions/download-artifact@v3
-      with:
-        name: artifact
-
     - name: List
       run: |
         pwd
         ls
 
+    - name: Download tfplan.out
+      uses: actions/download-artifact@v3
+      with:
+        name: tfplan
     - name: Terraform Apply/Destroy
       run: |
         terraform apply tfplan.out
