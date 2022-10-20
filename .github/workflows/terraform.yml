@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   setup:
-    name: 'Terraform'
+    name: 'setup'
     runs-on: ubuntu-latest
     environment: dev
 
@@ -43,6 +43,10 @@ jobs:
 
     # Initialize a new or existing Terraform working directory, run the plan to generate tfplan.out for terraform apply to use
   Init_Plan:
+    - name: 'Init'
+      runs-on: ubuntu-latest
+      environment: dev
+
     - name: Terraform Init/Plan
       run: |
         terraform fmt -check
