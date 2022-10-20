@@ -51,7 +51,7 @@ jobs:
     # The assigned approvers need to manually approve to proceed with terraform apply
     - uses: trstringer/manual-approval@v1
       with:
-#        secret: ${{ github.TOKEN }}
+        secret: ${{ github.TOKEN }}
         approvers: xiaoanne
         minimum-approvals: 1
         issue-title: "Terraform apply"
