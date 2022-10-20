@@ -1,4 +1,4 @@
-name: 'Terraform'
+name: 'Terraform_Approval'
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
   setup:
     name: 'Terraform'
     runs-on: ubuntu-latest
-#    environment: dev
+    environment: dev
 
     # Use the Bash shell, set working directory
     defaults:
@@ -47,6 +47,12 @@ jobs:
         terraform fmt -check
         terraform init
         terraform plan -input=false -out=tfplan.out
+
+    - name: Upload tfplan.outs
+      uses: actions/upload-artifact@v3
+      with:
+        name: tfplan.out
+        path: tfplan.out
 
   terraform:
     name: 'apply'
