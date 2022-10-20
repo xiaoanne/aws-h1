@@ -48,7 +48,7 @@ jobs:
         terraform init
         terraform plan -input=false -out=tfplan.out
 
-    - name: Upload tfplan.outs
+    - name: Upload tfplan.out
       uses: actions/upload-artifact@v3
       with:
         name: tfplan.out
@@ -61,28 +61,35 @@ jobs:
     runs-on: ubuntu-latest
     environment: prod
 
-    # Use the Bash shell, set working directory
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./website_s3
-
-    steps:
-    # Checkout the repository to the GitHub Actions runner
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    # The assigned approvers need to manually approve to proceed with terraform apply
-    - name: Manual approve
-      uses: trstringer/manual-approval@v1
+  steps:
+    - name: Download tfplan.out
+      uses: actions/download-artifact@v3
       with:
-        secret: ${{ github.TOKEN }}
-        approvers: xiaoanne
-        minimum-approvals: 1
+        name: tfplan.out
 
-    # Apply and/or destroy the infrastructure
     - name: Terraform Apply/Destroy
       run: |
         terraform apply tfplan.out
         sleep 10
         terraform destroy -auto-approve
+
+#    # Use the Bash shell, set working directory
+#    defaults:
+#      run:
+#        shell: bash
+#        working-directory: ./website_s3
+#
+#    steps:
+#    # Checkout the repository to the GitHub Actions runner
+#    - name: Checkout
+#      uses: actions/checkout@v3
+#
+#    # The assigned approvers need to manually approve to proceed with terraform apply
+#    - name: Manual approve
+#      uses: trstringer/manual-approval@v1
+#      with:
+#        secret: ${{ github.TOKEN }}
+#        approvers: xiaoanne
+#        minimum-approvals: 1
+
+    # Apply and/or destroy the infrastructure
