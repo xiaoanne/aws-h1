@@ -56,8 +56,8 @@ jobs:
     - name: Upload tfplan.out
       uses: actions/upload-artifact@v3
       with:
-        name: tfplan.out
-        path: tfplan.out
+        name: plan
+        path: /home/runner/work/aws-h1/aws-h1/website_s3/tfplan.out
 #  apply:
 #    name: 'Terrform Apply'
 #    needs: plan
