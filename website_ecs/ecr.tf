@@ -6,7 +6,5 @@ resource "aws_ecr_repository" "anne_test_website" {
     scan_on_push = true
   }
 
-  tags = {
-    Name = "anne"
-  }
+  tags = local.tags
 }
