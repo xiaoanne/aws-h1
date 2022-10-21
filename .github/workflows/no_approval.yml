@@ -54,12 +54,12 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ../website
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG  
 
-#    # Initialize a new or existing Terraform working directory, run the plan to generate tfplan.out for terraform apply to use
-#    - name: Terraform Init/Plan
-#      run: |
-#        terraform fmt -check
-#        terraform init
-#        terraform plan -input=false -out=tfplan.out
+    # Initialize a new or existing Terraform working directory, run the plan to generate tfplan.out for terraform apply to use
+    - name: Terraform Init/Plan
+      run: |
+        terraform fmt -check
+        terraform init
+        terraform plan -input=false -out=tfplan.out
 #
 #    # Apply and/or destroy the infrastructure
 #    - name: Terraform Apply/Destroy
