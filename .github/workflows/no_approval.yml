@@ -51,7 +51,7 @@ jobs:
         ECR_REPOSITORY: "anne-test-website"
         IMAGE_TAG: "10_22"
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ../website/Dockerfile
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ../website/Dockerfile
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG  
 
 #    # Initialize a new or existing Terraform working directory, run the plan to generate tfplan.out for terraform apply to use
