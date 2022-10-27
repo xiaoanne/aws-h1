@@ -7,8 +7,9 @@ on:
       - 'test'
   pull_request:
 
-permissions:
-  contents: read-all
+permissions: read-all|write-all
+#permissions:
+#  contents: read-all
 
 jobs:
   plan:
