@@ -12,3 +12,22 @@ locals {
     Name = "anne"
   }
 }
+
+locals {
+  ports_in = [
+    22,
+    80,
+    443,
+  ]
+  ports_out = [
+    0
+  ]
+}
+
+locals {
+  ec2_ami = "ami-067e6178c7a211324"
+}
+
+locals {
+  ec2_type = "t2.micro"
+}
