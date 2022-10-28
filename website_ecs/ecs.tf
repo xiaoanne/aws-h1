@@ -23,12 +23,12 @@ resource "aws_ecs_task_definition" "anne_test_website_ecs_task" {
     }
   ]
   DEFINITION
-  requires_compatibilities = ["EC2"] # Stating that we are using ECS Fargate
+  requires_compatibilities = ["FARGATE"] # Stating that we are using ECS Fargate
   network_mode             = "awsvpc"    # Using awsvpc as our network mode as this is required for Fargate
   memory                   = 512         # Specifying the memory our container requires
   cpu                      = 256         # Specifying the CPU our container requires
-  execution_role_arn       = aws_iam_role.anne_test_ecs_task_role.arn
-  task_role_arn = aws_iam_role.anne_test_ecs_task_role.arn
+  execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
+  task_role_arn = aws_iam_role.ecsTaskExecutionRole.arn
 
   tags = local.tags
 }
@@ -36,7 +36,9 @@ resource "aws_ecs_task_definition" "anne_test_website_ecs_task" {
 resource "aws_ecs_service" "anne-test-website-ecs-service" {
   name            = "anne-test-website-ecs-service"
   cluster         = aws_ecs_cluster.anne_test_website_ecs_cluster.id
-  task_definition = aws_ecs_task_definition.anne_test_website_ecs_task.arn
+#  task_definition = aws_ecs_task_definition.anne_test_website_ecs_task.arn
+  task_definition      = "${aws_ecs_task_definition.anne_test_website_ecs_task.family}"
+  launch_type = "FARGATE"
   desired_count   = 1
 #  iam_role = aws_iam_role.anne_test_ecs_task_role.arn
 
