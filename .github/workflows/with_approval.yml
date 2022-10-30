@@ -51,13 +51,14 @@ jobs:
         terraform init
         terraform plan -input=false -out=tfplan.out
 
-    - name: Manual approval
-      uses: trstringer/manual-approval@v1
-      with:
-        secret: ${{ github.TOKEN }}
-        approvers: xiaoanne
-        minimum-approvals: 1
-        issue-title: "Manual approval before applying terraform changes"
+#    - name: Manual approval
+#      uses: trstringer/manual-approval@v1
+#      with:
+#        secret: ${{ github.TOKEN }}
+#        approvers: xiaoanne
+#        minimum-approvals: 1
+#        issue-title: "Manual approval before applying terraform changes"
+
 #    - name: Upload tfplan.out
 #      uses: actions/upload-artifact@v3
 #      with:
