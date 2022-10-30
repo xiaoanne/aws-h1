@@ -23,7 +23,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./website_ecs
+        working-directory: ./website_s3
 
     steps:
     # Checkout the repository to the GitHub Actions runner
