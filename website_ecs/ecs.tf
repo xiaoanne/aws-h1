@@ -10,7 +10,8 @@ resource "aws_ecs_task_definition" "anne_test_website_ecs_task" {
   [
     {
       "name": "anne",
-      "image": "${aws_ecr_repository.anne_test_website.repository_url}:10_22",
+#      "image": "${aws_ecr_repository.anne_test_website.repository_url}:10_22",
+      "image": "064782962204.dkr.ecr.ap-southeast-2.amazonaws.com/anne-test-website:10_22",
       "essential": true,
       "portMappings": [
         {
