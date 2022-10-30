@@ -7,7 +7,7 @@ on:
       - 'test'
   pull_request:
 
-permissions: write-all
+permissions: write
 #permissions:
 #  contents: read-all
 
