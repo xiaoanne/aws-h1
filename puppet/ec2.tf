@@ -4,7 +4,7 @@
 #  #  count                       = length(local.private_subnet)
 #  ami                         = local.ec2_ami
 #  instance_type               = local.ec2_type
-#    vpc_security_group_ids = [aws_security_group.allow_web.id]
+#  security_groups             = [aws_security_group.allow_web.id]
 #  subnet_id                   = aws_subnet.private_3.id
 #  user_data                   = file("web.conf")
 #  key_name                    = aws_key_pair.kp.key_name
@@ -54,18 +54,45 @@
 #  #  }
 #}
 #
-#resource "aws_instance" "anne_test_website_ec2_1" {
-#  ami                         = local.ec2_ami
-#  instance_type               = local.ec2_type
-#    vpc_security_group_ids = [aws_security_group.allow_web.id]
+resource "aws_instance" "anne_test_website_ec2_1" {
+  ami                         = local.ec2_ami
+  instance_type               = local.ec2_medium
+  vpc_security_group_ids      = [aws_security_group.allow_web.id]
+  subnet_id                   = aws_subnet.private_1.id
+  user_data_base64            = filebase64("web.conf")
+  key_name                    = aws_key_pair.kp.key_name
+  associate_public_ip_address = true
 
-#  subnet_id                   = aws_subnet.private_1.id
-#  user_data                   = file("web.conf")
-#  key_name                    = aws_key_pair.kp.key_name
-#  associate_public_ip_address = true
-#
-#
-#  tags = {
-#    Name = "anne-1"
-#  }
-#}
+
+  tags = {
+    Name = "anne-1-master"
+  }
+}
+resource "aws_instance" "anne_test_website_ec2_2" {
+  ami                         = local.ec2_ami
+  instance_type               = local.ec2_micro
+  vpc_security_group_ids      = [aws_security_group.allow_web.id]
+  subnet_id                   = aws_subnet.private_2.id
+  user_data                   = filebase64("web.conf")
+  key_name                    = aws_key_pair.kp.key_name
+  associate_public_ip_address = true
+
+
+  tags = {
+    Name = "anne-2"
+  }
+}
+resource "aws_instance" "anne_test_website_ec2_3" {
+  ami                         = local.ec2_ami
+  instance_type               = local.ec2_micro
+  vpc_security_group_ids      = [aws_security_group.allow_web.id]
+  subnet_id                   = aws_subnet.private_2.id
+  user_data                   = filebase64("web.conf")
+  key_name                    = aws_key_pair.kp.key_name
+  associate_public_ip_address = true
+
+
+  tags = {
+    Name = "anne-3"
+  }
+}

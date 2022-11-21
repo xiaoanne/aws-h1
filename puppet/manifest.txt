@@ -1,0 +1,48 @@
+include '::mysql::server'
+include '::php'
+
+class apache2 {
+    package {'apache2':
+        ensure => 'present',
+    }
+}
+
+class directories {
+  # create a directory
+  file { '/var/www/anne':
+    ensure => 'directory',
+  }
+}
+
+tidy { '/var/www/html':
+  recurse => 1,
+  matches => [ '*.html'],
+}
+
+class fetch_file {
+  include ::wget
+  wget::fetch { 'https://anne-test-website.s3.ap-southeast-2.amazonaws.com/index.html':
+    destination => '/var/www/html/',
+    timeout     => 15,
+    verbose     => true,
+  }
+  wget::fetch { 'https://anne-test-website.s3.ap-southeast-2.amazonaws.com/test.jpg':
+    destination => '/var/www/html/',
+    timeout     => 15,
+    verbose     => true,
+  }
+  wget::fetch { 'https://anne-test-website.s3.ap-southeast-2.amazonaws.com/anne.mp4':
+    destination => '/var/www/html/',
+    timeout     => 15,
+    verbose     => true,
+  }
+}
+
+exec { 'using creates':
+  command => ["/bin/touch", "/tmp/a.txt"]
+}
+
+
+include apache2
+include directories
+include fetch_file

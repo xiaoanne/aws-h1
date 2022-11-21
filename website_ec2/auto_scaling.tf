@@ -6,6 +6,7 @@ resource "aws_launch_template" "anne_test_asg_template" { # Not specifying the n
   key_name      = aws_key_pair.kp.key_name
 
   network_interfaces {
+#    vpc_security_group_ids = [aws_security_group.allow_web.id]
     security_groups = [aws_security_group.allow_web.id] # if not specified in network interface, need to use vpc_security_group_ids attribute.
     #    subnet_id                   = aws_subnet.private_3.id           # no need to specify subnet so the scaled up instance can locate in different subnets/AZs.
     associate_public_ip_address = true
