@@ -33,14 +33,16 @@ kinetik run -a init --config-file config/tile.json
 
 
 export IMAGE_REGISTRY_USERNAME="xiaoanne"
-export IMAGE_REGISTRY_TOKEN="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"
+export IMAGE_REGISTRY_TOKEN="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"
 docker rmi $(docker images -a -q)
 docker rm $(docker ps --filter status=exited -q)
-docker build --build-arg GITHUB_USERNAME="xiaoanne" --build-arg GITHUB_TOKEN="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" . -t kinetik-tile-github:latest
+docker build --build-arg GITHUB_USERNAME="xiaoanne" --build-arg GITHUB_TOKEN="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" . -t kinetik-tile-github:latest
 docker run -it  --entrypoint=sh kinetik-tile-github
 cd kinetik/
 vi config/tile.json
 
+export CR_PAT="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"
+echo $CR_PAT | docker login ghcr.io -u "xiaoanne" --password-stdin
 
 
 
