@@ -22,7 +22,7 @@ tile.json
 /kinetik/config # cat tile.json
 {
   "repositoryUsername": "xiaoanne",
-  "repositoryToken": "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",
+  "repositoryToken": "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",
   "repositoryName": "kinetik-tile-anne",
   "repositoryDescription": "This repository contains anne",
   "repositoryOwner": "xiaoanne",
@@ -33,18 +33,18 @@ kinetik run -a init --config-file config/tile.json
 
 
 export IMAGE_REGISTRY_USERNAME="xiaoanne"
-export IMAGE_REGISTRY_TOKEN="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"
+export IMAGE_REGISTRY_TOKEN="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"
 docker rmi $(docker images -a -q)
 docker rm $(docker ps --filter status=exited -q)
-docker build --build-arg GITHUB_USERNAME="xiaoanne" --build-arg GITHUB_TOKEN="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" . -t kinetik-tile-github:latest
+docker build --build-arg GITHUB_USERNAME="xiaoanne" --build-arg GITHUB_TOKEN="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" . -t kinetik-tile-github:latest
 docker run -it  --entrypoint=sh kinetik-tile-github
 cd kinetik/
 vi config/tile.json
 
-export CR_PAT="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"
+export CR_PAT="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"
 echo $CR_PAT | docker login ghcr.io -u "xiaoanne" --password-stdin
 
-
+git clone https://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@github.com/section6nz/kinetik-repository-templates.git
 
 
 
