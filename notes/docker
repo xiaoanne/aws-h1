@@ -1,0 +1,60 @@
+  21 cat tile.json
+  22 cd ..
+  23 kinetik run -a init --config-file config/tile.json
+  24 cd config/
+  25 vi tile.json
+  26 cd ..
+  27 kinetik run -a init --config-file config/tile.json
+  28 history
+  29 kinetik run -a init --config-file config/tile.json
+  30 cat config/tile.json
+  31 kinetik run -a init --config-file config/tile.json
+  32 kinetik run -a destroy --config-file config/tile.json
+  33 kinetik run -a init --config-file config/tile.json
+  34 kinetik run -a destroy --config-file config/tile.json
+  35 kinetik run -a init --config-file config/tile.json
+  36 history
+/kinetik # ls
+bin     config  tile    tmp
+/kinetik # cd config/
+/kinetik/config # ls
+tile.json
+/kinetik/config # cat tile.json
+{
+  "repositoryUsername": "xiaoanne",
+  "repositoryToken": "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",
+  "repositoryName": "kinetik-tile-anne",
+  "repositoryDescription": "This repository contains anne",
+  "repositoryOwner": "xiaoanne",
+  "repositoryTemplateType": "kinetik-tile-ansible"
+}
+kinetik run -a destroy --config-file config/tile.json
+kinetik run -a init --config-file config/tile.json
+
+
+export IMAGE_REGISTRY_USERNAME="xiaoanne"
+export IMAGE_REGISTRY_TOKEN="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"
+docker rmi $(docker images -a -q)
+docker rm $(docker ps --filter status=exited -q)
+docker build --build-arg GITHUB_USERNAME="xiaoanne" --build-arg GITHUB_TOKEN="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" . -t kinetik-tile-github:latest
+docker run -it  --entrypoint=sh kinetik-tile-github
+cd kinetik/
+vi config/tile.json
+
+
+
+
+
+
+  msg: 'The ''tile_name'' variable value is {''changed'': False,
+  ''ansible_facts'': {
+  ''local_repository_path'': ''/tmp/kinetik-tile-anne_kinetik-tile-ansible_caeph_o3/kinetik-tile-anne'',
+  ''local_repository_templates_path'': ''templates/kinetik-tile-ansible'',
+  ''tile_name'': ''anne''},
+  ''failed'': False}'
+
+  ok: [localhost] =>
+  msg: 'The ''temp_dir'' variable value is {
+  ''changed'': True,
+  ''path'': ''/tmp/kinetik-tile-anne_kinetik-tile-ansible_caeph_o3'',
+  ''uid'': 0, ''gid'': 0, ''owner'': ''root'', ''group'': ''root'', ''mode'': ''0700'', ''state'': ''directory'', ''size'': 4096, ''failed'': False}'
