@@ -36,7 +36,7 @@ export IMAGE_REGISTRY_USERNAME="xiaoanne"
 export IMAGE_REGISTRY_TOKEN="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"
 docker rmi $(docker images -a -q)
 docker rm $(docker ps --filter status=exited -q)
-docker build --build-arg GITHUB_USERNAME="xiaoanne" --build-arg GITHUB_TOKEN="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" . -t kinetik-tile-github:latest
+docker build --build-arg GITHUB_USERNAME="xiaoanne" --build-arg GITHUB_TOKEN="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" . -t kinetik-tile-github:latest
 docker build --build-arg GITHUB_TOKEN="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" . -t kinetik-tile-github:latest
 docker run -it  --entrypoint=sh kinetik-tile-github
 cd kinetik/
