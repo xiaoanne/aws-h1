@@ -32,17 +32,20 @@ kinetik run -a destroy --config-file config/tile.json
 kinetik run -a init --config-file config/tile.json
 
 
+docker run ubuntu:latest /bin/bash -c 'ls -ll'
+
 export IMAGE_REGISTRY_USERNAME="xiaoanne"
 export IMAGE_REGISTRY_TOKEN="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"
 docker rmi $(docker images -a -q)
 docker rm $(docker ps --filter status=exited -q)
 docker build --build-arg GITHUB_USERNAME="xiaoanne" --build-arg GITHUB_TOKEN="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" . -t kinetik-tile-github:latest
 docker build --build-arg GITHUB_TOKEN="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" . -t kinetik-tile-github:latest
-docker run -it  --entrypoint=sh kinetik-tile-github
+docker run -it  --entrypoint=sh hello-world:latest
+
 cd kinetik/
 vi config/tile.json
 
-export CR_PAT="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"
+export CR_PAT="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"
 echo $CR_PAT | docker login ghcr.io -u "xiaoanne" --password-stdin
 
 git clone https://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@github.com/section6nz/kinetik-repository-templates.git
@@ -61,3 +64,12 @@ git clone https://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@github.com/section6nz
   ''changed'': True,
   ''path'': ''/tmp/kinetik-tile-anne_kinetik-tile-ansible_caeph_o3'',
   ''uid'': 0, ''gid'': 0, ''owner'': ''root'', ''group'': ''root'', ''mode'': ''0700'', ''state'': ''directory'', ''size'': 4096, ''failed'': False}'
+
+
+  docker pull ghcr.io/section6nz/kinetik-tile-gitlab/kinetik-tile-gitlab:latest
+  docker pull ghcr.io/section6nz/kinetik-tile-hello-world/kinetik-tile-hello-world:0.1.0
+
+
+docker run --rm -it ghcr.io/xiaoanne/kinetik-tile-hello-world/kinetik-tile-hello-world:0.1.0 run --action init --config '{"message":  "Hello World!"}'
+docker run --rm -it ghcr.io/xiaoanne/kinetik-tile-hello-world/kinetik-tile-hello-world:0.1.0 run --action init --config '{"message":  "Hello World!"}'
+docker run --rm -it ghcr.io/xiaoanne/kinetik-tile-hello-world/kinetik-tile-hello-world:0.1.0 run --action init --config "{'message':  'Hello World!'}"
