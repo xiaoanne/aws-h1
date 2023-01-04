@@ -22,12 +22,15 @@ tile.json
 /kinetik/config # cat tile.json
 {
   "repositoryUsername": "xiaoanne",
-  "repositoryToken": "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",
+  "repositoryToken": "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",
   "repositoryName": "kinetik-tile-anne",
   "repositoryDescription": "This repository contains anne",
   "repositoryOwner": "xiaoanne",
   "repositoryTemplateType": "kinetik-tile-ansible"
 }
+docker run --rm ghcr.io/section6nz/kinetik-tile-github/kinetik-tile-github:latest run --action init --config '{"repositoryUsername":  "xiaoanne", "repositoryToken": "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", "repositoryName": "kinetik-tile-anne", "repositoryDescription": "This repository contains anne", "repositoryOwner": "xiaoanne", "repositoryTemplateType": "kinetik-tile-ansible"}'
+
+
 kinetik run -a destroy --config-file config/tile.json
 kinetik run -a init --config-file config/tile.json
 
@@ -36,16 +39,17 @@ docker run ubuntu:latest /bin/bash -c 'ls -ll'
 
 export IMAGE_REGISTRY_USERNAME="xiaoanne"
 export IMAGE_REGISTRY_TOKEN="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"
+docker rm $(docker ps --filter status=exited -q)
 docker rmi $(docker images -a -q)
 docker rm $(docker ps --filter status=exited -q)
-docker build --build-arg GITHUB_USERNAME="xiaoanne" --build-arg GITHUB_TOKEN="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" . -t kinetik-tile-github:latest
+docker build --build-arg GITHUB_USERNAME="xiaoanne" --build-arg GITHUB_TOKEN="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" . -t github:latest
 docker build --build-arg GITHUB_TOKEN="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" . -t kinetik-tile-github:latest
 docker run -it  --entrypoint=sh hello-world:latest
 
 cd kinetik/
 vi config/tile.json
 
-export CR_PAT="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"
+export CR_PAT="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"
 echo $CR_PAT | docker login ghcr.io -u "xiaoanne" --password-stdin
 
 git clone https://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@github.com/section6nz/kinetik-repository-templates.git
@@ -73,3 +77,47 @@ git clone https://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@github.com/section6nz
 docker run --rm -it ghcr.io/xiaoanne/kinetik-tile-hello-world/kinetik-tile-hello-world:0.1.0 run --action init --config '{"message":  "Hello World!"}'
 docker run --rm -it ghcr.io/xiaoanne/kinetik-tile-hello-world/kinetik-tile-hello-world:0.1.0 run --action init --config '{"message":  "Hello World!"}'
 docker run --rm -it ghcr.io/xiaoanne/kinetik-tile-hello-world/kinetik-tile-hello-world:0.1.0 run --action init --config "{'message':  'Hello World!'}"
+
+
+local
+docker run --rm -it ghcr.io/xiaoanne/kinetik-tile-hello-world/kinetik-tile-hello-world:0.1.0 run --action deploy --config '{"message":  "Hello World!"}'
+docker run --rm -it ghcr.io/xiaoanne/kinetik-tile-hello-world/kinetik-tile-hello-world:0.1.0 run --action undeploy --config '{"message":  "Hello World!"}'
+docker run --rm -it ghcr.io/xiaoanne/kinetik-tile-hello-world/kinetik-tile-hello-world:0.1.0 run --action configure --config '{"message":  "Hello World!"}'
+docker run --rm -it ghcr.io/xiaoanne/kinetik-tile-hello-world/kinetik-tile-hello-world:0.1.0 run --action verify --config '{"message":  "Hello World!"}'
+docker run --rm -it ghcr.io/xiaoanne/kinetik-tile-hello-world/kinetik-tile-hello-world:0.1.0 run --action destroy --config '{"message":  "Hello World!"}'
+remote
+
+docker run --rm -it ghcr.io/section6nz/kinetik-tile-github/kinetik-tile-github:latest run --action init --config-file examples/config.json
+docker run --rm -it --entrypoint=sh ghcr.io/section6nz/kinetik-tile-github/kinetik-tile-github:latest run --action init --config-file examples/config.json
+
+
+for i in {'init', 'destroy'}; echo $i;
+declare -a ActionList=('init' 'deploy' 'undeploy' 'configure' 'verify' 'destroy')
+for val in ${ActionList[@]}; do docker run --rm ghcr.io/xiaoanne/kinetik-tile-hello-world/kinetik-tile-hello-world:0.1.0 run --action $val --config '{"message":  "Hello World!"}'; done
+
+docker run --rm ghcr.io/section6nz/kinetik-tile-hello-world/kinetik-tile-hello-world:latest run --action $i --config '{"message":  "Hello World!"}'; sleep 10
+
+docker run -it --entrypoint=sh github:latest
+docker run -it --entrypoint=sh ghcr.io/xiaoanne/kinetik-tile-hello-world/kinetik-tile-hello-world:0.1.0 -c "ls -ll"
+docker run -it --entrypoint=sh ghcr.io/xiaoanne/kinetik-tile-github/kinetik-tile-github:latest -c "cat /kinetik/tile/examples/config.json"
+docker run -it -v ${PWD}/a.json:/tile/a.json --entrypoint=sh ghcr.io/section6nz/kinetik-tile-github/kinetik-tile-github:latest -c "ls -ll /kinetik/tile"
+docker run --rm github:latest run --action init --config-file /kinetik/tile/examples/config.json
+
+docker run -it \
+  -v ${PWD}/a.json:/tile/a.json \
+  ghcr.io/section6nz/kinetik-tile-hello-world/kinetik-tile-hello-world:latest \
+    run \
+    --config-file /kinetik/tile/examples/a.json \
+    --action init
+
+
+
+docker run -it --rm \
+  ghcr.io/section6nz/kinetik-tile-github/kinetik-tile-github:latest \
+    run \
+    --config-file /kinetik/tile/examples/config.json \
+    --action init
+
+docker tag ghcr.io/section6nz/kinetik-tile-github/kinetik-tile-github:latest ghcr.io/xiaoanne/kinetik-tile-github/kinetik-tile-github:latest
+
+
