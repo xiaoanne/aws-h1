@@ -121,3 +121,7 @@ docker run -it --rm \
 docker tag ghcr.io/section6nz/kinetik-tile-github/kinetik-tile-github:latest ghcr.io/xiaoanne/kinetik-tile-github/kinetik-tile-github:latest
 
 
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/amd64/kubectl"
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/amd64/kubectl.sha256"
+curl -LO "https://dl.k8s.io/release/v1.24.9/bin/darwin/arm64/kubectl"
+curl -LO "https://dl.k8s.io/release/v1.24.9/bin/darwin/arm64/kubectl.sha256"
