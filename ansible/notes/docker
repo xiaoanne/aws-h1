@@ -125,3 +125,48 @@ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stabl
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/amd64/kubectl.sha256"
 curl -LO "https://dl.k8s.io/release/v1.24.9/bin/darwin/arm64/kubectl"
 curl -LO "https://dl.k8s.io/release/v1.24.9/bin/darwin/arm64/kubectl.sha256"
+
+
+
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Federated": "arn:aws:iam::594300857662:oidc-provider/token.actions.githubusercontent.com"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+                "StringLike": {
+                    "token.actions.githubusercontent.com:sub": "repo:xiaoanne/kinetik-tile-helm:*"
+                },
+                "StringEquals": {
+                    "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+                }
+            }
+        }
+    ]
+}
+
+{
+   "Version": "2012-10-17",
+   "Statement": [
+       {
+           "Effect": "Allow",
+           "Principal": {
+               "Federated": "arn:aws:iam::594300857662:oidc-provider/token.actions.githubusercontent.com"
+           },
+           "Action": "sts:AssumeRoleWithWebIdentity",
+           "Condition": {
+               "StringEquals": {
+                   "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+               },
+               "StringLike": {
+                   "token.actions.githubusercontent.com:sub": "repo:xiaoanne/kinetik-tile-helm:*"
+               }
+           }
+       }
+   ]
+}
