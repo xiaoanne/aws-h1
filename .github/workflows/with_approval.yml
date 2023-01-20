@@ -42,12 +42,6 @@ jobs:
         role-to-assume: arn:aws:iam::594300857662:role/anne-github-eks-role
         aws-region: ap-southeast-2
 
-    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-      with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
     # Initialize a new or existing Terraform working directory, run the plan to generate tfplan.out for terraform apply to use
     - name: Terraform Init/Plan
       run: |
