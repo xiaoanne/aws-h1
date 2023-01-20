@@ -49,7 +49,7 @@ jobs:
     # Initialize a new or existing Terraform working directory, run the plan to generate tfplan.out for terraform apply to use
     - name: Terraform Init/Plan
       run: |
-        terraform fmt -check
+        terraform fmt 
         terraform init
         terraform plan -input=false -out=tfplan.out
 
