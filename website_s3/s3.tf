@@ -20,8 +20,8 @@ resource "aws_s3_bucket" "anne_test_website" {
 
 resource "aws_s3_bucket_acl" "anne_test_website_s3_acl" {
   bucket = aws_s3_bucket.anne_test_website.id
-  acl    = "public"
-#  acl    = "private"
+#  acl    = "public"
+  acl    = "private"
 }
 
 # Set block_public_acls to false so that uploading .html and media work without being access denied in the first time to deploy, then set it to true to prevent public access.
@@ -29,9 +29,11 @@ resource "aws_s3_bucket_acl" "anne_test_website_s3_acl" {
 resource "aws_s3_bucket_public_access_block" "anne_test_website_block_public_Access" {
   bucket                  = aws_s3_bucket.anne_test_website.id
   block_public_acls       = false
-  block_public_policy     = true
+#  block_public_policy     = true
+  block_public_policy     = false
   ignore_public_acls      = false
-  restrict_public_buckets = true
+#  restrict_public_buckets = true
+  restrict_public_buckets = false
 }
 
 resource "aws_s3_bucket_website_configuration" "anne_test_website_s3_configuration" {
